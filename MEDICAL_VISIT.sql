@@ -1,0 +1,111 @@
+-- ==================================================================
+-- Esquema unificado para Atención Médica (Oracle)
+-- Owner: ADM_TEST_BD  |  PDB: XEPDB1
+-- Compatible con Spring JPA (ddl-auto=validate)
+-- ==================================================================
+
+-- =====================
+-- LIMPIEZA (DROP SAFE)
+-- =====================
+-- Borra tablas si existen (ignora error ORA-00942)
+BEGIN
+  EXECUTE IMMEDIATE 'DROP TABLE MEDICAL_VISIT CASCADE CONSTRAINTS PURGE';
+EXCEPTION WHEN OTHERS THEN
+  IF SQLCODE != -942 THEN RAISE; END IF;
+END;
+/
+BEGIN
+  EXECUTE IMMEDIATE 'DROP TABLE PATIENT CASCADE CONSTRAINTS PURGE';
+EXCEPTION WHEN OTHERS THEN
+  IF SQLCODE != -942 THEN RAISE; END IF;
+END;
+/
+
+-- Borra secuencias si tu versión anterior las usaba (hoy usamos IDENTITY)
+BEGIN
+  FOR r IN (
+    SELECT sequence_name
+    FROM   user_sequences
+    WHERE  sequence_name IN ('SEQ_PATIENT','SEQ_MEDICAL_VISIT')
+  ) LOOP
+    EXECUTE IMMEDIATE 'DROP SEQUENCE '||r.sequence_name;
+  END LOOP;
+END;
+/
+
+-- =====================
+-- PACIENTES Y VISITAS
+-- =====================
+CREATE TABLE PATIENT (
+  ID          NUMBER GENERATED ALWAYS AS IDENTITY,
+  RUT         VARCHAR2(20)  NOT NULL,
+  FIRST_NAME  VARCHAR2(80)  NOT NULL,
+  LAST_NAME   VARCHAR2(80)  NOT NULL,
+  BIRTH_DATE  DATE          NULL,
+  PHONE       VARCHAR2(30)  NULL,
+  EMAIL       VARCHAR2(120) NULL,
+  CONSTRAINT PK_PATIENT PRIMARY KEY (ID),
+  CONSTRAINT UK_PATIENT_RUT UNIQUE (RUT),
+  CONSTRAINT CK_PATIENT_RUT_REGEX CHECK (REGEXP_LIKE(RUT, '^[0-9]{1,2}\.[0-9]{3}\.[0-9]{3}-[0-9Kk]$'))
+);
+
+CREATE TABLE MEDICAL_VISIT (
+  ID          NUMBER GENERATED ALWAYS AS IDENTITY,
+  PATIENT_ID  NUMBER        NOT NULL,
+  VISIT_DATE  DATE          NOT NULL,
+  SPECIALTY   VARCHAR2(80)  NOT NULL,
+  DIAGNOSIS   VARCHAR2(400) NULL,
+  NOTES       VARCHAR2(1000) NULL,
+  CONSTRAINT PK_MEDICAL_VISIT PRIMARY KEY (ID),
+  CONSTRAINT FK_VISIT_PATIENT FOREIGN KEY (PATIENT_ID) REFERENCES PATIENT(ID)
+);
+
+CREATE INDEX IDX_VISIT_PATIENT ON MEDICAL_VISIT(PATIENT_ID);
+
+-- =====================
+-- SEED: PACIENTES
+-- =====================
+INSERT INTO PATIENT (RUT, FIRST_NAME, LAST_NAME, BIRTH_DATE, PHONE, EMAIL)
+VALUES ('12.345.678-9', 'Ana', 'González', DATE '1991-05-10', '+56 9 1234 5678', 'ana.gonzalez@example.com');
+
+INSERT INTO PATIENT (RUT, FIRST_NAME, LAST_NAME, BIRTH_DATE, PHONE, EMAIL)
+VALUES ('9.876.543-K', 'Luis', 'Pérez', DATE '1988-11-02', '+56 9 8765 4321', 'luis.perez@example.com');
+
+INSERT INTO PATIENT (RUT, FIRST_NAME, LAST_NAME, BIRTH_DATE, PHONE, EMAIL)
+VALUES ('7.654.321-0', 'María', 'Rojas', DATE '1993-03-14', '+56 9 5555 1111', 'maria.rojas@example.com');
+
+INSERT INTO PATIENT (RUT, FIRST_NAME, LAST_NAME, BIRTH_DATE, PHONE, EMAIL)
+VALUES ('15.432.198-7', 'Pedro', 'Mendoza', DATE '1985-07-22', '+56 9 5555 2222', 'pedro.mendoza@example.com');
+
+INSERT INTO PATIENT (RUT, FIRST_NAME, LAST_NAME, BIRTH_DATE, PHONE, EMAIL)
+VALUES ('23.456.789-5', 'Sofía', 'Castillo', DATE '1998-12-01', '+56 9 5555 3333', 'sofia.castillo@example.com');
+
+INSERT INTO PATIENT (RUT, FIRST_NAME, LAST_NAME, BIRTH_DATE, PHONE, EMAIL)
+VALUES ('6.789.123-4', 'Carlos', 'Morales', DATE '1990-09-09', '+56 9 5555 4444', 'carlos.morales@example.com');
+
+-- =====================
+-- SEED: VISITAS
+-- =====================
+-- Para Ana (12.345.678-9)
+INSERT INTO MEDICAL_VISIT (PATIENT_ID, VISIT_DATE, SPECIALTY, DIAGNOSIS, NOTES)
+SELECT ID, DATE '2025-09-01', 'Cardiología', 'HTA controlada', 'Control anual'
+FROM PATIENT WHERE RUT='12.345.678-9';
+
+INSERT INTO MEDICAL_VISIT (PATIENT_ID, VISIT_DATE, SPECIALTY, DIAGNOSIS, NOTES)
+SELECT ID, DATE '2025-09-10', 'Dermatología', 'Dermatitis', 'Rx tópica'
+FROM PATIENT WHERE RUT='12.345.678-9';
+
+-- Para Luis (9.876.543-K)
+INSERT INTO MEDICAL_VISIT (PATIENT_ID, VISIT_DATE, SPECIALTY, DIAGNOSIS, NOTES)
+SELECT ID, DATE '2025-08-20', 'Medicina General', 'Resfrío común', 'Reposo 3 días'
+FROM PATIENT WHERE RUT='9.876.543-K';
+
+-- Para María (7.654.321-0)
+INSERT INTO MEDICAL_VISIT (PATIENT_ID, VISIT_DATE, SPECIALTY, DIAGNOSIS, NOTES)
+SELECT ID, DATE '2025-07-05', 'Oftalmología', 'Miopía leve', 'Indicación lentes'
+FROM PATIENT WHERE RUT='7.654.321-0';
+
+-- =====================
+-- FIN
+-- =====================
+COMMIT;
