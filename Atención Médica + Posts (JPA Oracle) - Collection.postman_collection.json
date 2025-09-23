@@ -1,0 +1,587 @@
+{
+	"info": {
+		"_postman_id": "ccdf871a-f8d1-4326-a448-8ec336ef90f3",
+		"name": "Atención Médica + Posts (JPA Oracle) - Collection",
+		"description": "Colección para probar CRUD y búsquedas de Pacientes, Visitas Médicas, Posts y Comments.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48058820",
+		"_collection_link": "https://ja-goldemberg-2324175.postman.co/workspace/JACOB-ERNESTO-GOLDEMBERG-SAN-MA~182e93f8-a464-4dcf-816e-5f870b8fb9e8/collection/48058820-ccdf871a-f8d1-4326-a448-8ec336ef90f3?action=share&source=collection_link&creator=48058820"
+	},
+	"item": [
+		{
+			"name": "Patients",
+			"item": [
+				{
+					"name": "List Patients",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Patient by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200/204/404 esperado', function () {",
+									"  pm.expect([200,204,404]).to.include(pm.response.code);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/patients/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Patient by RUT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/patients/by-rut?rut=18.412.448-3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients",
+								"by-rut"
+							],
+							"query": [
+								{
+									"key": "rut",
+									"value": "18.412.448-3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"  pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rut\": \"18.412.448-3\",\n  \"firstName\": \"Jacob\",\n  \"lastName\": \"Goldemberg\",\n  \"birthDate\": \"1993-09-11\",\n  \"phone\": \"+56 9 9893 4844\",\n  \"email\": \"ja.goldemberg@duocuc.cl\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rut\": \"11.222.333-4\",\n  \"firstName\": \"Jose Miguel\",\n  \"lastName\": \"Andrades\",\n  \"birthDate\": \"1990-01-01\",\n  \"phone\": \"+56 9 3333 2222\",\n  \"email\": \"mariaj@example.com\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/patients/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200/204/404 esperado', function () {",
+									"  pm.expect([200,204,404]).to.include(pm.response.code);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/patients/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Medical Visits",
+			"item": [
+				{
+					"name": "List Visits",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/visits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"visits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Visits by Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/visits/by-patient/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"visits",
+								"by-patient",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Visit by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200/204/404 esperado', function () {",
+									"  pm.expect([200,204,404]).to.include(pm.response.code);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/visits/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"visits",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Visit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"  pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient\": {\n    \"id\": \"1\"\n  },\n  \"date\": \"2025-09-22\",\n  \"specialty\": \"Traumatologia\",\n  \"diagnosis\": \"Control\",\n  \"notes\": \"Recomendacion de kinesiologia para rodilla\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/visits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"visits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Visit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 2xx', function () {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patient\": {\n    \"id\": \"1\"\n  },\n  \"date\": \"2025-09-20\",\n  \"specialty\": \"Dermatología\",\n  \"diagnosis\": \"Sarpullido alergico\",\n  \"notes\": \"clotrimazol se recomienda test cutaneo\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/visits/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"visits",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Visit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200/204/404 esperado', function () {",
+									"  pm.expect([200,204,404]).to.include(pm.response.code);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/visits/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"visits",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "patientId",
+			"value": "1"
+		},
+		{
+			"key": "visitId",
+			"value": "1"
+		},
+		{
+			"key": "postId",
+			"value": "1"
+		},
+		{
+			"key": "commentId",
+			"value": "1"
+		},
+		{
+			"key": "rut",
+			"value": "12.345.678-9"
+		},
+		{
+			"key": "specialty",
+			"value": "Cardiología"
+		},
+		{
+			"key": "dateFrom",
+			"value": "2025-08-01"
+		},
+		{
+			"key": "dateTo",
+			"value": "2025-09-30"
+		},
+		{
+			"key": "searchQ",
+			"value": "sprint"
+		},
+		{
+			"key": "author",
+			"value": "Jacob"
+		},
+		{
+			"key": "minRating",
+			"value": "4"
+		}
+	]
+}
